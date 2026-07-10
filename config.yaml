@@ -1,0 +1,7 @@
+knowledge_dir: "./knowledge"
+workspace_dir: "./workspace"
+projects:
+  sample:
+    name: "sample"
+    repo: "./examples/sample-repo"
+    branch: "main"
