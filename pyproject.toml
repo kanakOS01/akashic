@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "akashic"
+version = "0.1.0"
+description = "CLI for Git-backed knowledge repositories."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pydantic>=2",
+  "PyYAML>=6",
+  "typer>=0.12",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+]
+
+[project.scripts]
+akashic = "akashic.cli:app"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
