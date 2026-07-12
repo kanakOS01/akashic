@@ -19,6 +19,11 @@ class GenerationConfig(BaseModel):
     model: str | None = None
 
 
+class AgentConfig(BaseModel):
+    provider: str = "codex"
+    command: str | None = None
+
+
 class RepositoryConfig(BaseModel):
     name: str
     settings: dict[str, Any] = Field(default_factory=dict)
@@ -30,7 +35,7 @@ class AkashicConfig(BaseModel):
     version: int = 1
     knowledge: KnowledgeConfig = Field(default_factory=KnowledgeConfig)
     repositories: list[RepositoryConfig] = Field(default_factory=list)
-    agent: str | None = None
+    agent: AgentConfig = Field(default_factory=AgentConfig)
     site: SiteConfig = Field(default_factory=SiteConfig)
     generation: GenerationConfig = Field(default_factory=GenerationConfig)
 
