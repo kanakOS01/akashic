@@ -5,6 +5,7 @@ from pathlib import Path
 import typer
 
 from akashic import __version__
+from akashic.engine.generate import GenerateError, run_generate
 from akashic.engine.init import init_workspace
 from akashic.engine.repositories import (
     RepositoryError,
@@ -125,6 +126,28 @@ def list_command(ctx: typer.Context) -> None:
             typer.echo(f"{repository.name}\t{repository.path}\t[missing target]")
         else:
             typer.echo(f"{repository.name}\t{repository.path}")
+
+
+@app.command()
+def generate(ctx: typer.Context) -> None:
+    """Generate knowledge docs from attached repositories."""
+    workspace = _workspace(ctx)
+    try:
+        result = run_generate(workspace)
+    except GenerateError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+
+    for warning in result.warnings:
+        typer.echo(f"Warning: {warning}", err=True)
+
+    if result.changed_files:
+        typer.echo("Changed files:")
+        for path in result.changed_files:
+            typer.echo(f"- {path}")
+    else:
+        typer.echo("Changed files: none")
+
+    typer.echo(f"State written: {result.state_path}")
 
 
 def _workspace(ctx: typer.Context):

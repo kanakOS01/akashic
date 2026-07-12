@@ -27,6 +27,7 @@ class AgentInvocation:
 @dataclass(frozen=True)
 class AgentResult:
     invocation: AgentInvocation | None
+    exit_code: int = 0
     written_files: tuple[Path, ...] = ()
 
 
@@ -129,3 +130,13 @@ class FakeProvider:
 
     def version(self) -> str:
         return self.version_text
+
+
+def provider_from_config(config: AgentConfig) -> AgentProvider:
+    if config.provider == "claude":
+        return ClaudeProvider(config)
+    if config.provider == "codex":
+        return CodexProvider(config)
+    if config.provider == "fake":
+        return FakeProvider()
+    raise ValueError(f"Unknown agent provider '{config.provider}'.")
