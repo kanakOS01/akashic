@@ -47,6 +47,7 @@ def test_build_site_invokes_mkdocs_and_produces_dist(runner, tmp_path: Path, mon
     assert config["theme"]["name"] == "material"
     assert "search" in config["plugins"]
     assert "pymdownx.superfences" in str(config["markdown_extensions"])
+    assert config["exclude_docs"] == "tests/\nsrc/\npyproject.toml\nuv.lock"
     assert {"Services": [{"Billing": "services/billing.md"}]} in config["nav"]
 
 

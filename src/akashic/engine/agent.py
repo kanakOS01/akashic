@@ -42,6 +42,10 @@ class AgentProvider(Protocol):
         ...
 
 
+class AgentUnavailableError(RuntimeError):
+    pass
+
+
 class CommandAgentProvider:
     default_command: str
 
@@ -64,13 +68,21 @@ class CommandAgentProvider:
         )
         return (result.stdout or result.stderr).strip()
 
+    def run_invocation(self, invocation: AgentInvocation) -> AgentResult:
+        """Hand the TTY to the agent CLI and wait for the interactive session to exit."""
+        if not self.is_available():
+            raise AgentUnavailableError(
+                f"Agent binary '{self.binary}' not found on PATH."
+            )
+        completed = subprocess.run(invocation.command, cwd=invocation.cwd)
+        return AgentResult(invocation=invocation, exit_code=completed.returncode)
+
 
 class ClaudeProvider(CommandAgentProvider):
     default_command = "claude"
 
     def generate(self, context: AgentContext) -> AgentResult:
-        invocation = self.build_invocation(context)
-        return AgentResult(invocation=invocation)
+        return self.run_invocation(self.build_invocation(context))
 
     def build_invocation(self, context: AgentContext) -> AgentInvocation:
         command = [self.binary, context.prompt]
@@ -88,8 +100,7 @@ class CodexProvider(CommandAgentProvider):
     default_command = "codex"
 
     def generate(self, context: AgentContext) -> AgentResult:
-        invocation = self.build_invocation(context)
-        return AgentResult(invocation=invocation)
+        return self.run_invocation(self.build_invocation(context))
 
     def build_invocation(self, context: AgentContext) -> AgentInvocation:
         return AgentInvocation(

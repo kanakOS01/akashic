@@ -79,12 +79,14 @@ class MkDocsSiteProvider:
             "site_name": "Akashic",
             "docs_dir": str(workspace.root),
             "site_dir": str(workspace.root / "dist"),
-            "exclude_docs": [
-                "tests/",
-                "src/",
-                "pyproject.toml",
-                "uv.lock",
-            ],
+            "exclude_docs": "\n".join(
+                [
+                    "tests/",
+                    "src/",
+                    "pyproject.toml",
+                    "uv.lock",
+                ]
+            ),
             "theme": {
                 "name": "material",
                 "features": ["navigation.instant", "navigation.sections", "search.suggest"],

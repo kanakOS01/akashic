@@ -7,7 +7,12 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
-from akashic.engine.agent import AgentContext, AgentProvider, provider_from_config
+from akashic.engine.agent import (
+    AgentContext,
+    AgentProvider,
+    AgentUnavailableError,
+    provider_from_config,
+)
 from akashic.engine.config import AkashicLocalConfig, load_local_config
 from akashic.engine.prompt_builder import build_master_prompt, load_workspace_prompt_templates
 from akashic.engine.workspace import Workspace
@@ -73,7 +78,10 @@ def run_generate(workspace: Workspace, provider: AgentProvider | None = None) ->
         source_repositories=valid_repos,
     )
 
-    agent_result = provider.generate(context)
+    try:
+        agent_result = provider.generate(context)
+    except AgentUnavailableError as exc:
+        raise GenerateError(str(exc)) from exc
     changed_files = _changed_files(workspace.root)
     success = agent_result.exit_code == 0 and bool(changed_files)
     if agent_result.exit_code == 0 and not changed_files:

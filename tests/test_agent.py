@@ -3,7 +3,13 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from akashic.engine.agent import AgentContext, ClaudeProvider, CodexProvider, FakeProvider
+from akashic.engine.agent import (
+    AgentContext,
+    AgentUnavailableError,
+    ClaudeProvider,
+    CodexProvider,
+    FakeProvider,
+)
 from akashic.engine.config import AgentConfig
 
 
@@ -83,6 +89,51 @@ def test_version_runs_configured_binary(monkeypatch) -> None:
 
     assert version == "codex 1.2.3"
     assert calls == [["/custom/codex", "--version"]]
+
+
+def test_claude_provider_generate_hands_tty_to_child_and_reports_exit_code(
+    monkeypatch, tmp_path: Path
+) -> None:
+    knowledge = tmp_path / "knowledge"
+    api = tmp_path / "api"
+    knowledge.mkdir()
+    api.mkdir()
+    context = AgentContext(
+        prompt="MASTER PROMPT",
+        knowledge_root=knowledge,
+        source_repositories={"api": api},
+    )
+    calls: list[dict] = []
+
+    def fake_run(command, cwd):
+        calls.append({"command": command, "cwd": cwd})
+        return subprocess.CompletedProcess(command, 3)
+
+    monkeypatch.setattr("akashic.engine.agent.shutil.which", lambda binary: binary)
+    monkeypatch.setattr("akashic.engine.agent.subprocess.run", fake_run)
+
+    result = ClaudeProvider().generate(context)
+
+    assert calls == [
+        {"command": ["claude", "MASTER PROMPT", "--add-dir", str(api)], "cwd": knowledge}
+    ]
+    assert result.exit_code == 3
+    assert result.invocation is not None
+
+
+def test_provider_generate_raises_when_binary_missing(monkeypatch, tmp_path: Path) -> None:
+    knowledge = tmp_path / "knowledge"
+    knowledge.mkdir()
+    context = AgentContext(prompt="MASTER PROMPT", knowledge_root=knowledge)
+
+    monkeypatch.setattr("akashic.engine.agent.shutil.which", lambda binary: None)
+
+    try:
+        CodexProvider().generate(context)
+    except AgentUnavailableError as exc:
+        assert "codex" in str(exc)
+    else:
+        raise AssertionError("expected AgentUnavailableError")
 
 
 def test_fake_provider_records_prompt_and_writes_file(tmp_path: Path) -> None:
