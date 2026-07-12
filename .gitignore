@@ -1,5 +1,5 @@
-.pytest_cache
+.scratch
+.env
 .venv
-knowledge
-__pycache__
-examples
+__pycache__/
+.pytest_cache/
