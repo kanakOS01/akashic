@@ -174,6 +174,80 @@ def build_site(ctx: typer.Context) -> None:
     typer.echo(f"Built site at {dist}")
 
 
+@app.command()
+def doctor(ctx: typer.Context) -> None:
+    """Validate configuration, repository paths, and agent installation."""
+    workspace = _workspace(ctx)
+    from akashic.engine.doctor import diagnose
+    results = diagnose(workspace)
+
+    all_passed = True
+    for res in results:
+        status_str = "Pass" if res.passed else "Fail"
+        name_map = {
+            "Configuration Schema": "configuration",
+            "Git Presence": "Git presence",
+            "Attached Repositories": "attached repositories",
+            "Agent Provider": "agent provider",
+            "Writability": "writability",
+        }
+        display_name = name_map.get(res.name, res.name.lower())
+        if res.passed:
+            typer.echo(f"Checking {display_name}... {status_str} ({res.message})")
+        else:
+            all_passed = False
+            typer.echo(f"Checking {display_name}... {status_str}")
+            typer.echo(f"  Error: {res.message}")
+        for detail in res.details:
+            typer.echo(f"  - {detail}")
+
+    if not all_passed:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def status(ctx: typer.Context) -> None:
+    """Show the status of attached repositories, generation, and documents."""
+    workspace = _workspace(ctx)
+    from akashic.engine.status import get_status
+    state = get_status(workspace)
+
+    typer.echo("Attached repositories:")
+    if state.repositories:
+        for name, path in state.repositories:
+            if path:
+                typer.echo(f"- {name} ({path})")
+            else:
+                typer.echo(f"- {name} (missing local path)")
+    else:
+        typer.echo("No repositories attached.")
+
+    typer.echo("\nLast generation:")
+    if state.last_generation:
+        typer.echo(f"- Time: {state.last_generation.get('timestamp')}")
+        typer.echo(f"- Provider: {state.last_generation.get('provider')}")
+        repos_str = ", ".join(state.last_generation.get("repos", []))
+        typer.echo(f"- Repositories: {repos_str}")
+        duration = state.last_generation.get("duration")
+        duration_str = f"{duration:.1f} seconds" if isinstance(duration, (int, float)) else "unknown"
+        typer.echo(f"- Duration: {duration_str}")
+    else:
+        typer.echo("- None")
+
+    typer.echo("\nPending changes:")
+    if state.pending_changes:
+        for change in state.pending_changes:
+            typer.echo(f"  {change}")
+    else:
+        typer.echo("- None")
+
+    typer.echo("\nDocument statistics:")
+    for section, count in state.document_counts.items():
+        doc_word = "document" if count == 1 else "documents"
+        typer.echo(f"- {section}: {count} {doc_word}")
+
+
+
 def _workspace(ctx: typer.Context):
     knowledge = ctx.obj.get("knowledge") if ctx.obj else None
     try:
