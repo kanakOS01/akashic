@@ -14,6 +14,7 @@ from akashic.engine.repositories import (
     list_repositories,
 )
 from akashic.engine.workspace import WorkspaceNotFoundError, discover_workspace
+from akashic.server.site import SiteError, default_site_provider
 
 app = typer.Typer(
     add_completion=False,
@@ -148,6 +149,29 @@ def generate(ctx: typer.Context) -> None:
         typer.echo("Changed files: none")
 
     typer.echo(f"State written: {result.state_path}")
+
+
+@app.command()
+def serve(ctx: typer.Context) -> None:
+    """Serve the knowledge repository as a documentation site."""
+    workspace = _workspace(ctx)
+    try:
+        process = default_site_provider().serve(workspace)
+    except SiteError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo(f"Serving Akashic site on http://127.0.0.1:{workspace.config.site.port}")
+    process.wait()
+
+
+@app.command("build-site")
+def build_site(ctx: typer.Context) -> None:
+    """Build the knowledge repository documentation site."""
+    workspace = _workspace(ctx)
+    try:
+        dist = default_site_provider().build_site(workspace)
+    except SiteError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo(f"Built site at {dist}")
 
 
 def _workspace(ctx: typer.Context):

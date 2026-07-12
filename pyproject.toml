@@ -9,7 +9,10 @@ description = "CLI for Git-backed knowledge repositories."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+  "mkdocs>=1.6",
+  "mkdocs-material>=9.5",
   "pydantic>=2",
+  "pymdown-extensions>=10.8",
   "PyYAML>=6",
   "typer>=0.12",
 ]
