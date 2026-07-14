@@ -1,7 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 
-mermaid.initialize({ startOnLoad: false, theme: "default" });
+mermaid.initialize({ 
+  startOnLoad: false, 
+  theme: "dark",
+  themeVariables: {
+    background: "#000000",
+    primaryColor: "#111111",
+    primaryTextColor: "#ffffff",
+    lineColor: "#333333",
+  }
+});
 
 let counter = 0;
 
@@ -26,7 +35,11 @@ export function MermaidChart({ code }: { code: string }) {
   }, [code]);
 
   if (error) {
-    return <pre className="text-red-600 text-sm whitespace-pre-wrap">{error}</pre>;
+    return <pre className="text-red-500 bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-lg text-xs font-mono whitespace-pre-wrap">{error}</pre>;
   }
-  return <div ref={ref} className="my-4 flex justify-center" />;
+  return (
+    <div className="my-6 p-6 rounded-xl border border-[#1a1a1a] bg-[#0a0a0a] flex justify-center overflow-x-auto">
+      <div ref={ref} className="w-full max-w-full" />
+    </div>
+  );
 }

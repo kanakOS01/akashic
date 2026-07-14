@@ -11,6 +11,18 @@
 
 The project uses a standard `pyproject.toml` (Hatchling build backend) and declares the console script `akashic`.
 
+Install the released CLI:
+
+```bash
+uv tool install akashic-kb
+# or
+pipx install akashic-kb
+```
+
+The PyPI distribution is `akashic-kb`; the installed CLI command is `akashic`.
+
+## From a checkout
+
 With [uv](https://docs.astral.sh/uv/) (used by the repo, `uv.lock` present):
 
 ```bash
@@ -22,7 +34,6 @@ Editable install with pip / pipx:
 
 ```bash
 pip install -e ".[dev]"     # includes pytest
-# or, once published / for isolated global use:
 pipx install .
 ```
 
