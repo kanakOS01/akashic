@@ -1,2 +1,62 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #222222; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #333333; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { color-scheme: dark; }
+
+body {
+  background-color: #000000;
+  color: #e4e4e7;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Prose — always dark, pure black */
+.prose {
+  --tw-prose-body: #d4d4d8;
+  --tw-prose-headings: #ffffff;
+  --tw-prose-links: #10b981;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #737373;
+  --tw-prose-bullets: #404040;
+  --tw-prose-hr: #1a1a1a;
+  --tw-prose-quotes: #f4f4f5;
+  --tw-prose-quote-borders: #10b981;
+  --tw-prose-captions: #737373;
+  --tw-prose-code: #f4f4f5;
+  --tw-prose-pre-code: #f4f4f5;
+  --tw-prose-pre-bg: #0a0a0a;
+  --tw-prose-th-borders: #1a1a1a;
+  --tw-prose-td-borders: #1a1a1a;
+  max-width: 100%;
+}
+
+.prose a { text-decoration: none; font-weight: 500; color: #10b981; }
+.prose a:hover { color: #34d399; text-decoration: underline; text-underline-offset: 2px; }
+
+.prose code {
+  background-color: #0d0d0d;
+  padding: 0.125rem 0.4rem;
+  border-radius: 0.25rem;
+  border: 1px solid #1a1a1a;
+  font-weight: 400;
+  font-size: 0.85em;
+  color: #f4f4f5;
+}
+.prose code::before { content: "" !important; }
+.prose code::after  { content: "" !important; }
+
+.prose pre { background: transparent; padding: 0; border: none; margin: 0; }
+.prose pre code { background: transparent; padding: 0; border: none; font-size: 1em; }
+
+.prose table { border-collapse: collapse; }
+.prose thead { border-bottom: 1px solid #1a1a1a; }
+.prose tbody tr { border-bottom: 1px solid #1a1a1a; }
+.prose hr { border-color: #1a1a1a; }

@@ -34,12 +34,16 @@ export function useDoc(path: string | undefined) {
   );
 
   const commit = useCallback(
-    async (message?: string) => {
+    async (message?: string): Promise<void> => {
       if (!path) return;
       await ds.commitDoc([path], message);
     },
     [path, ds],
   );
 
-  return { doc, loading, error, reload: load, save, commit };
+  const push = useCallback(async () => {
+    await ds.pushDoc();
+  }, [ds]);
+
+  return { doc, loading, error, reload: load, save, commit, push };
 }
