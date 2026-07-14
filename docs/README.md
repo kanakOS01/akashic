@@ -14,6 +14,7 @@ This directory documents how to install, configure, and operate the CLI as it is
 | [configuration.md](configuration.md) | `config.yaml`, `config.local.yaml`, every field + default |
 | [generation.md](generation.md) | Prompt system, providers, HUMAN sections, frontmatter, current limitation |
 | [site.md](site.md) | `serve` and `build-site` (MkDocs) |
+| [publishing.md](publishing.md) | Build, inspect, and publish PyPI releases |
 | [troubleshooting.md](troubleshooting.md) | `doctor`, common errors |
 
 ## Mental model

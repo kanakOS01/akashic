@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.10"
 
 [[package]]
-name = "akashic"
+name = "akashic-kb"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
@@ -18,6 +18,11 @@ dev = [
     { name = "twine" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "twine" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "pydantic", specifier = ">=2" },
@@ -27,6 +32,9 @@ requires-dist = [
     { name = "typer", specifier = ">=0.12" },
 ]
 provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "twine", specifier = ">=6.2.0" }]
 
 [[package]]
 name = "annotated-doc"

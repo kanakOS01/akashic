@@ -23,6 +23,20 @@ prompts to an agent provider such as Codex or Claude.
 
 Akashic is a Python package targeting Python 3.10+.
 
+Install the released CLI:
+
+```bash
+uv tool install akashic-kb
+# or
+pipx install akashic-kb
+```
+
+The installed command is still `akashic`:
+
+```bash
+akashic --version
+```
+
 For local development:
 
 ```bash
@@ -125,6 +139,7 @@ Full docs live in [`docs/README.md`](docs/README.md):
 - [`docs/configuration.md`](docs/configuration.md)
 - [`docs/generation.md`](docs/generation.md)
 - [`docs/site.md`](docs/site.md)
+- [`docs/publishing.md`](docs/publishing.md)
 - [`docs/troubleshooting.md`](docs/troubleshooting.md)
 
 ## Development
