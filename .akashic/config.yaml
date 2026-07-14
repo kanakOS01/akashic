@@ -1,0 +1,11 @@
+version: 1
+knowledge:
+  path: .
+repositories: []
+agent:
+  provider: codex
+  command: null
+site:
+  port: 6969
+generation:
+  model: null

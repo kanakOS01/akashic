@@ -190,6 +190,7 @@ def doctor(ctx: typer.Context) -> None:
             "Attached Repositories": "attached repositories",
             "Agent Provider": "agent provider",
             "Writability": "writability",
+            "Node Runtime": "node runtime",
         }
         display_name = name_map.get(res.name, res.name.lower())
         if res.passed:

@@ -146,4 +146,4 @@ def _git(cwd: Path, *args: str, check: bool = False) -> subprocess.CompletedProc
 
 
 def _combined_output(result) -> str:
-    return result.stdout + (result.stderr or "")
+    return result.output

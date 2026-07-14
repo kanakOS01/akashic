@@ -101,21 +101,21 @@ Output: warnings (to stderr), a `Changed files:` list (or `Changed files: none`)
 
 ## `akashic serve`
 
-Start a local MkDocs dev server reading directly from the knowledge repo. Binds `127.0.0.1:<site.port>` (default `6969`). Blocks until the server exits.
+Start the local React documentation site (Vite dev server) reading directly from the knowledge repo. Binds `127.0.0.1:<site.port>` (default `6969`). Blocks until the server exits (Ctrl-C). Installs frontend dependencies if missing, then runs `npm run dev`. Supports in-browser editing (Save writes back to the knowledge repo; Commit stages and commits via Git). See [site.md](site.md).
 
-Errors `Failed to start documentation server: 'mkdocs' executable not found…` if MkDocs is missing.
+Errors `… Node.js not found on PATH. …` / `… npm not found on PATH. …` if Node/npm is missing.
 
 ---
 
 ## `akashic build-site`
 
-Compile the docs to `dist/` (via `mkdocs build`). Output: `Built site at <root>/dist`.
+Compile the docs into a static `dist/` (via the Vite build). Output: `Built site at <root>/dist`. In this static mode the site is read-only (no in-browser editing).
 
 ---
 
 ## `akashic doctor`
 
-Run five checks and print pass/fail for each: configuration schema, Git presence, attached repositories, agent provider, writability. Exits with code `1` if any check fails. See [troubleshooting.md](troubleshooting.md).
+Run six checks and print pass/fail for each: configuration schema, Git presence, attached repositories, agent provider, writability, and Node runtime. Exits with code `1` if any check fails. See [troubleshooting.md](troubleshooting.md).
 
 ---
 

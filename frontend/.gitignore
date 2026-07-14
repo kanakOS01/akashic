@@ -1,0 +1,15 @@
+# dependencies
+/node_modules
+
+# build output
+/dist
+/out
+/build
+
+# typescript
+*.tsbuildinfo
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
