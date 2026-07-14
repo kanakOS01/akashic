@@ -19,6 +19,14 @@ dev = [
   "pytest>=8",
 ]
 
+[dependency-groups]
+dev = [
+  "pytest>=8",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
 [project.scripts]
 akashic = "akashic.cli:app"
 

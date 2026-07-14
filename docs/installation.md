@@ -14,7 +14,7 @@ The project uses a standard `pyproject.toml` (Hatchling build backend) and decla
 With [uv](https://docs.astral.sh/uv/) (used by the repo, `uv.lock` present):
 
 ```bash
-uv sync                 # install project + locked dependencies
+uv sync                 # install project + dev dependencies (includes pytest)
 uv run akashic --version
 ```
 
