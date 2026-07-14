@@ -11,6 +11,7 @@ Start with `akashic doctor`. It runs five checks and exits non-zero if any fail.
 | **Attached repositories** | every attached repo has a local path that exists and is a Git repo | lists per-repo issues: missing mapping, path does not exist, or not a Git repo |
 | **Agent provider** | the configured provider's binary is on `PATH` and `--version` works | `Agent '<name>' is not installed (command '<cmd>' not found on PATH).` |
 | **Writability** | the knowledge root exists, is a directory, and a temp file can be written under `.akashic/` | `Knowledge repository … is not writable` / `Cannot write to knowledge repository: …` |
+| **Node runtime** | `node` and `npm` are on `PATH` | `Node.js executable not found on PATH. …` / `npm executable not found on PATH. …` |
 
 `doctor` writes and deletes `.akashic/doctor_write_test` as part of the writability check.
 
@@ -46,5 +47,8 @@ Same fix as above — `doctor`'s agent-provider check surfaces this ahead of run
 ### Source repo changes unexpectedly during `generate`
 Exposing a source repo to the agent (`--add-dir` / Codex readable roots) also grants its write tools access to that directory — Akashic does not hard-enforce "read-only" for source repos in v1 (see [generation.md](generation.md#known-limitations)). Review the live session's file writes as you approve permissions, and prefer generating against a clean/committed source tree so any stray write shows up in `git status` immediately.
 
-### `serve` / `build-site`: `'mkdocs' executable not found`
-Install dependencies (`uv sync` or `pip install -e .`) so MkDocs is available, then retry.
+### `serve` / `build-site`: `Node.js not found on PATH` / `npm not found on PATH`
+`serve` and `build-site` launch a Vite + React site and require Node.js (with npm) on `PATH`. Install Node.js from https://nodejs.org (npm ships with it), then retry. `doctor`'s Node Runtime check surfaces this ahead of running the command.
+
+### `serve` / `build-site`: frontend build fails (`npm build exited with status <n>`)
+The `frontend/` dependencies may be missing or stale. Delete `frontend/node_modules` and let `akashic` reinstall, or run `npm install` in `frontend/` yourself, then retry.

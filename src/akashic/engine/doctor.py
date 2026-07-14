@@ -111,6 +111,16 @@ def check_agent(workspace: Workspace) -> CheckResult:
         return CheckResult("Agent Provider", False, f"Failed to get agent version: {exc}")
 
 
+def check_node() -> CheckResult:
+    node_path = shutil.which("node")
+    if not node_path:
+        return CheckResult("Node Runtime", False, "Node.js executable not found on PATH. Required for akashic serve/build-site.")
+    npm_path = shutil.which("npm")
+    if not npm_path:
+        return CheckResult("Node Runtime", False, "npm executable not found on PATH. Required for akashic serve/build-site.")
+    return CheckResult("Node Runtime", True, "Node.js and npm are installed.")
+
+
 def check_writability(workspace: Workspace) -> CheckResult:
     root = workspace.root
     if not root.exists():
@@ -138,4 +148,5 @@ def diagnose(workspace: Workspace) -> list[CheckResult]:
         check_repositories(workspace),
         check_agent(workspace),
         check_writability(workspace),
+        check_node(),
     ]

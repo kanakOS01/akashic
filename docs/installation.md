@@ -5,7 +5,7 @@
 - **Python** 3.10 or newer.
 - **Git** on `PATH` (used for `init`, `attach` validation, change detection, and `status`/`doctor`).
 - **A coding agent CLI** on `PATH` for real generation — `claude` (Claude Code) or `codex` (Codex). Optional until you run `generate` against a real provider.
-- **MkDocs** (installed automatically as a dependency) for `serve` / `build-site`.
+- **Node.js + npm** on `PATH` for `serve` / `build-site` (the React site). `akashic` installs frontend dependencies automatically on first run.
 
 ## Install
 
@@ -26,7 +26,7 @@ pip install -e ".[dev]"     # includes pytest
 pipx install .
 ```
 
-Runtime dependencies (from `pyproject.toml`): `mkdocs`, `mkdocs-material`, `pydantic>=2`, `pymdown-extensions`, `PyYAML`, `typer`.
+Runtime dependencies (from `pyproject.toml`): `pydantic>=2`, `PyYAML`, `typer`. The site (`serve` / `build-site`) additionally requires Node.js + npm and the `frontend/` npm dependencies, which `akashic` installs lazily on first use.
 
 ## Verify
 
