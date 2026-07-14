@@ -10,6 +10,7 @@ export interface DataSource {
   getDoc(path: string): Promise<DocRecord>;
   saveDoc(path: string, raw: string): Promise<{ path: string; updated: string }>;
   commitDoc(paths: string[], message?: string): Promise<void>;
+  pushDoc(): Promise<void>;
 }
 
 class LiveApiDataSource implements DataSource {
@@ -51,6 +52,11 @@ class LiveApiDataSource implements DataSource {
     });
     if (!res.ok) throw new Error(await errorText(res));
   }
+
+  async pushDoc(): Promise<void> {
+    const res = await fetch("/api/push", { method: "POST" });
+    if (!res.ok) throw new Error(await errorText(res));
+  }
 }
 
 class StaticSnapshotDataSource implements DataSource {
@@ -89,6 +95,10 @@ class StaticSnapshotDataSource implements DataSource {
 
   async commitDoc(): Promise<void> {
     throw new Error("Committing is disabled in the static site.");
+  }
+
+  async pushDoc(): Promise<void> {
+    throw new Error("Pushing is disabled in the static site.");
   }
 }
 

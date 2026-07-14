@@ -5,18 +5,22 @@ import { useMeta } from "../hooks/useMeta";
 import { DocViewer } from "../components/DocViewer";
 import { DocEditor } from "../components/Editor";
 import { Toolbar } from "../components/Toolbar";
+import { CommitDialog } from "../components/CommitDialog";
 import { TableOfContents } from "../components/TableOfContents";
 
 export function DocPage() {
   const params = useParams();
   const slug = params["*"] ?? "";
   const path = slug.endsWith(".md") ? slug : `${slug}.md`;
-  const { doc, loading, error, save, commit } = useDoc(slug ? path : undefined);
+  const { doc, loading, error, save, commit, push } = useDoc(slug ? path : undefined);
   const meta = useMeta();
   const editable = meta?.editable ?? false;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
   const [status, setStatus] = useState<string | null>(null);
+  const [committing, setCommitting] = useState(false);
+  const [pushing, setPushing] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   if (loading) return <p className="text-[#525252] animate-pulse">Loading…</p>;
   if (error) return <p className="text-red-500 bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-lg text-sm">Failed to load: {error}</p>;
@@ -34,9 +38,33 @@ export function DocPage() {
     setStatus("Saved.");
   };
 
-  const handleCommit = async () => {
-    await commit();
-    setStatus("Committed to Git.");
+  const handleCommit = async (message: string) => {
+    setDialogOpen(false);
+    if (draft !== doc.raw) {
+      await save(draft);
+      setEditing(false);
+    }
+    setCommitting(true);
+    try {
+      await commit(message);
+      setStatus("Committed.");
+    } catch (e) {
+      setStatus(String(e));
+    } finally {
+      setCommitting(false);
+    }
+  };
+
+  const handlePush = async () => {
+    setPushing(true);
+    try {
+      await push();
+      setStatus("Pushed.");
+    } catch (e) {
+      setStatus(String(e));
+    } finally {
+      setPushing(false);
+    }
   };
 
   return (
@@ -57,7 +85,7 @@ export function DocPage() {
           </div>
           <div className="flex items-center gap-3 shrink-0">
             {status && (
-              <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+              <span className="text-xs bg-[#0c0c0c] border border-[#1a1a1a] text-[#d4d4d8] px-2 py-0.5 rounded font-mono">
                 {status}
               </span>
             )}
@@ -67,7 +95,10 @@ export function DocPage() {
               editing={editing}
               onToggleEdit={() => (editing ? setEditing(false) : startEdit())}
               onSave={handleSave}
-              onCommit={handleCommit}
+              onOpenCommit={() => setDialogOpen(true)}
+              onPush={handlePush}
+              committing={committing}
+              pushing={pushing}
             />
           </div>
         </div>
@@ -87,6 +118,12 @@ export function DocPage() {
           <TableOfContents content={doc.content} />
         </aside>
       )}
+
+      <CommitDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onSubmit={handleCommit}
+      />
     </div>
   );
 }

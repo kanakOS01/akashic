@@ -261,6 +261,37 @@ async function commitDocs(root: string, paths: string[], message?: string): Prom
   }
 }
 
+async function pushCommits(root: string): Promise<void> {
+  // Check if a remote origin is configured
+  try {
+    const { stdout } = await execFileAsync("git", ["-C", root, "remote", "get-url", "origin"]);
+    if (!stdout.trim()) {
+      throw Object.assign(new Error("No remote origin configured. Set one with `git remote add origin <url>`."), { status: 400 });
+    }
+  } catch (err) {
+    const e = err as { status?: number; stderr?: string; message?: string };
+    if (e.status === 400) throw err;
+    // git remote get-url exits non-zero if no remote exists
+    throw Object.assign(new Error("No remote origin configured. Set one with `git remote add origin <url>`."), { status: 400 });
+  }
+  try {
+    await execFileAsync("git", ["-C", root, "push"]);
+  } catch (err) {
+    const e = err as { stderr?: string; message?: string };
+    const msg = (e.stderr || e.message || "").toLowerCase();
+    if (/permission denied|access denied|could not read from remote|403|401/.test(msg)) {
+      throw Object.assign(new Error("Push failed: you don't have write access to this repository."), { status: 403 });
+    }
+    if (/rejected|non-fast-forward/.test(msg)) {
+      throw Object.assign(new Error("Push rejected: the remote has commits you don't have locally. Pull first."), { status: 409 });
+    }
+    if (/could not resolve host|network|econnrefused/.test(msg)) {
+      throw Object.assign(new Error("Push failed: could not connect to the remote. Check your network."), { status: 502 });
+    }
+    throw Object.assign(new Error(`Push failed: ${(e.stderr || e.message || "").trim()}`), { status: 500 });
+  }
+}
+
 function sendJson(res: ServerResponse, status: number, body: unknown): void {
   const payload = JSON.stringify(body);
   res.statusCode = status;
@@ -361,6 +392,15 @@ export function akashicPlugin(kbRootRaw: string): Plugin {
             } catch (err) {
               const status = (err as { status?: number }).status ?? 500;
               return sendJson(res, status, { error: (err as Error).message });
+            }
+          }
+
+          if (route === "/push" && req.method === "POST") {
+            try {
+              await pushCommits(root);
+              return sendJson(res, 200, { push: "ok" });
+            } catch (err) {
+              return sendJson(res, 500, { error: (err as Error).message });
             }
           }
 
