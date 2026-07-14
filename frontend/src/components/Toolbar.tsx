@@ -15,7 +15,7 @@ export function Toolbar({ editable, dirty, editing, onToggleEdit, onSave, onComm
 
   if (!editable) {
     return (
-      <span className="text-xs text-slate-400">Static site — editing disabled</span>
+      <span className="text-xs text-[#525252] font-medium">Static site — editing disabled</span>
     );
   }
 
@@ -24,38 +24,35 @@ export function Toolbar({ editable, dirty, editing, onToggleEdit, onSave, onComm
       {!editing ? (
         <button
           onClick={onToggleEdit}
-          className="flex items-center gap-1 rounded border px-2 py-1 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
+          className="flex items-center gap-1.5 rounded-lg border border-[#1a1a1a] bg-[#080808] hover:bg-[#151515] text-xs font-semibold text-[#d4d4d8] hover:text-white px-3 py-1.5 transition-all duration-150 active:scale-95"
         >
-          <Pencil size={14} /> Edit
+          <Pencil size={13} className="text-[#525252]" /> Edit
         </button>
       ) : (
         <>
           <button
             onClick={onSave}
             disabled={!dirty}
-            className="flex items-center gap-1 rounded border px-2 py-1 text-sm hover:bg-slate-100 disabled:opacity-40 dark:hover:bg-slate-800"
+            className="flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-semibold text-emerald-400 disabled:opacity-40 disabled:hover:bg-emerald-500/10 px-3 py-1.5 transition-all duration-150 active:scale-95"
           >
-            <Save size={14} /> Save
+            <Save size={13} /> Save
           </button>
           <button
             onClick={onToggleEdit}
-            className="flex items-center gap-1 rounded border px-2 py-1 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="flex items-center gap-1.5 rounded-lg border border-[#1a1a1a] bg-[#080808] hover:bg-[#151515] text-xs font-semibold text-[#d4d4d8] hover:text-white px-3 py-1.5 transition-all duration-150 active:scale-95"
           >
-            <Eye size={14} /> Preview
+            <Eye size={13} className="text-[#525252]" /> Preview
           </button>
           <button
             onClick={async () => {
               setCommitting(true);
-              try {
-                await onCommit();
-              } finally {
-                setCommitting(false);
-              }
+              try { await onCommit(); }
+              finally { setCommitting(false); }
             }}
             disabled={committing}
-            className="flex items-center gap-1 rounded border px-2 py-1 text-sm hover:bg-slate-100 disabled:opacity-40 dark:hover:bg-slate-800"
+            className="flex items-center gap-1.5 rounded-lg border border-[#1a1a1a] bg-[#080808] hover:bg-[#151515] text-xs font-semibold text-[#d4d4d8] hover:text-white px-3 py-1.5 disabled:opacity-40 transition-all duration-150 active:scale-95"
           >
-            <GitCommitHorizontal size={14} /> {committing ? "Committing…" : "Commit"}
+            <GitCommitHorizontal size={13} className="text-[#525252]" /> {committing ? "Committing…" : "Commit"}
           </button>
         </>
       )}
