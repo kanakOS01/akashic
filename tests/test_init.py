@@ -6,6 +6,7 @@ from pathlib import Path
 
 from akashic.cli import app
 from akashic.engine.config import load_config
+from akashic.engine.registry import KnowledgeBaseReference, list_knowledge_bases, registry_path
 from akashic.engine.workspace import WorkspaceNotFoundError, discover_workspace
 
 
@@ -22,6 +23,63 @@ def test_init_scaffolds_repo_and_initial_commit(runner, tmp_path: Path) -> None:
     assert (repo / ".akashic" / "config.yaml").exists()
     assert (repo / ".git").exists()
     assert _git(repo, "rev-parse", "--verify", "HEAD").returncode == 0
+
+
+def test_init_registers_knowledge_base_globally(runner, tmp_path: Path, monkeypatch) -> None:
+    global_home = tmp_path / "global" / "akashic"
+    monkeypatch.setenv("AKASHIC_GLOBAL_HOME", str(global_home))
+    repo = tmp_path / "knowledge"
+
+    result = runner.invoke(app, ["init", str(repo)])
+
+    assert result.exit_code == 0, result.stdout
+    assert registry_path(env=os.environ) == global_home / "knowledge-bases.yaml"
+    registry_text = registry_path(env=os.environ).read_text(encoding="utf-8")
+    assert "reference:" in registry_text
+    assert "path:" not in registry_text
+    assert list_knowledge_bases(env=os.environ) == [
+        KnowledgeBaseReference(name="knowledge", path=repo.resolve())
+    ]
+
+
+def test_init_without_path_initializes_current_directory_and_registers_reference(
+    runner,
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    global_home = tmp_path / "global" / "akashic"
+    repo = tmp_path / "checkout"
+    repo.mkdir()
+    monkeypatch.setenv("AKASHIC_GLOBAL_HOME", str(global_home))
+    monkeypatch.chdir(repo)
+
+    result = runner.invoke(app, ["init"])
+
+    assert result.exit_code == 0, result.stdout
+    assert (repo / ".akashic" / "config.yaml").exists()
+    assert (repo / "services").is_dir()
+    assert f"Initialized Akashic repository at {repo.resolve()}" in result.stdout
+    assert list_knowledge_bases(env=os.environ) == [
+        KnowledgeBaseReference(name="checkout", path=repo.resolve())
+    ]
+
+
+def test_registry_reads_legacy_path_entries(runner, tmp_path: Path, monkeypatch) -> None:
+    global_home = tmp_path / "global" / "akashic"
+    legacy = tmp_path / "legacy"
+    monkeypatch.setenv("AKASHIC_GLOBAL_HOME", str(global_home))
+    global_home.mkdir(parents=True)
+    (global_home / "knowledge-bases.yaml").write_text(
+        "version: 1\n"
+        "knowledge_bases:\n"
+        "  - name: legacy\n"
+        f"    path: {legacy}\n",
+        encoding="utf-8",
+    )
+
+    assert list_knowledge_bases(env=os.environ) == [
+        KnowledgeBaseReference(name="legacy", path=legacy)
+    ]
 
 
 def test_init_is_idempotent_and_preserves_content(runner, tmp_path: Path) -> None:

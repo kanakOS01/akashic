@@ -21,9 +21,11 @@ If none resolve, the command fails with: `No Akashic knowledge repo found from <
 
 ## `akashic init [PATH]`
 
-Initialize (or top up) a knowledge repository at `PATH` (default: current directory).
+Initialize (or top up) a knowledge repository at `PATH`. When `PATH` is omitted,
+Akashic initializes the current directory.
 
 Creates: `services/ flows/ system/ adr/ entities/ glossary/`, `.akashic/cache/`, `.akashic/logs/`, `README.md`, `.akashic/config.yaml`, `.gitignore`. Runs `git init` if not already a repo, and makes an empty initial commit if there is no `HEAD` yet.
+Registers the repository in the global Akashic registry at `~/akashic/knowledge-bases.yaml` (or `$AKASHIC_GLOBAL_HOME/knowledge-bases.yaml` when set), so Claude/Codex skills can discover all local knowledge bases. The knowledge base reference is the absolute path to the knowledge base.
 
 - **Idempotent:** existing directories, README, and config are left untouched; `.gitignore` lines are merged, not duplicated.
 - The initial commit is authored as `Akashic <akashic@example.invalid>` via `-c` overrides, so it does not depend on your global Git identity.
@@ -31,6 +33,24 @@ Creates: `services/ flows/ system/ adr/ entities/ glossary/`, `.akashic/cache/`,
 `.gitignore` always contains: `.akashic/cache/`, `.akashic/logs/`, `.akashic/config.local.yaml`.
 
 Output: `Initialized Akashic repository at <root>`
+
+---
+
+## `akashic bases`
+
+List every knowledge repository Akashic can discover from the machine-level
+registry and from knowledge base folders under the global Akashic folder.
+
+- Registry location defaults to `~/akashic/knowledge-bases.yaml`.
+- Set `AKASHIC_GLOBAL_HOME` to use a different global Akashic directory.
+- Each row is tab-separated: `<reference-path>\t<name>`.
+
+Output:
+```
+Registry: /Users/alice/akashic/knowledge-bases.yaml
+/Users/alice/akashic/.platform    platform
+/Users/alice/akashic/.payments    payments
+```
 
 ---
 
@@ -122,3 +142,14 @@ Run six checks and print pass/fail for each: configuration schema, Git presence,
 ## `akashic status`
 
 Print: attached repositories (with paths or `missing local path`), last generation (from `state.json`, or `None`), pending Git changes (porcelain), and per-section document counts (`*.md` under each section directory).
+
+---
+
+## `akashic add skill [--to claude|codex]`
+
+Install the Akashic skill into Claude Code or Codex.
+
+The installed skill points the agent at the global Akashic folder and registry.
+Each time the skill runs, it instructs the agent to read the registry, scan the
+global folder for knowledge bases containing `.akashic/config.yaml`, list the
+reference paths, and ask which one to use before reading docs.

@@ -12,6 +12,11 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
+@pytest.fixture(autouse=True)
+def isolated_global_akashic_home(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("AKASHIC_GLOBAL_HOME", str(tmp_path / "global-akashic"))
+
+
 @pytest.fixture
 def temp_knowledge_repo(tmp_path: Path) -> Callable[[str], Path]:
     def build(name: str = "knowledge") -> Path:
@@ -20,4 +25,3 @@ def temp_knowledge_repo(tmp_path: Path) -> Callable[[str], Path]:
         return repo
 
     return build
-

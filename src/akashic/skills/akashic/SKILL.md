@@ -1,26 +1,31 @@
 ---
 name: akashic-knowledge
 description: >-
-  Use this skill whenever you need context on how the attached repositories work,
-  how services interact, what a business entity or term means, how an end-to-end
-  flow works, or why a past architecture decision was made. This project's
-  engineering knowledge lives in an Akashic knowledge repository, not only in the
-  source code.
+  Use this skill to choose an Akashic knowledge base from the user's global
+  Akashic references before answering questions about services, architecture,
+  workflows, entities, glossary terms, or architecture decisions.
 ---
 
 # Akashic Knowledge Base
 
-This project keeps a Git-backed knowledge repository generated and maintained by
-[Akashic](https://github.com/), a CLI that orchestrates coding agents to document
-distributed codebases as plain Markdown. Before answering questions about system
-architecture, service ownership, business entities, cross-service flows, or past
-architecture decisions, look here first rather than guessing from source code alone.
+Akashic keeps Git-backed knowledge repositories generated and maintained as
+plain Markdown. Before answering questions about system architecture, service
+ownership, business entities, cross-service flows, or past architecture
+decisions, select a knowledge base reference path first.
+
+## Selection rule
+
+Do not assume the current working directory is the knowledge base. Do not inspect
+the current source repository as the Akashic knowledge base. First show the user
+the available Akashic knowledge base reference paths from the global Akashic
+folder/registry, then ask which one to use when there is more than one.
 
 ## Where the knowledge repo lives
 
 The knowledge repo is a normal Git repository, separate from the source repositories
-it documents. It's registered via `.akashic/config.yaml` (`knowledge.path`) and the
-attached source repos it covers are listed under `repositories:` in that same file.
+it documents. After the user chooses a reference path, use that path as the
+knowledge repo root. The attached source repos it covers are listed under
+`repositories:` in `.akashic/config.yaml`.
 Per-machine local paths for those source repos live in the gitignored
 `.akashic/config.local.yaml`.
 

@@ -11,6 +11,20 @@ This split keeps machine-specific absolute paths out of Git, so a teammate can c
 
 Both files are validated on load with `extra="forbid"` — unknown keys raise a clear error.
 
+Akashic also keeps a machine-level registry at `~/akashic/knowledge-bases.yaml`
+(`$AKASHIC_GLOBAL_HOME/knowledge-bases.yaml` when that environment variable is
+set). This registry is not part of any single knowledge repo. It records the
+display name and reference for every local knowledge base created with
+`akashic init`. The reference is always the absolute path to the knowledge base,
+and that path is what installed Claude/Codex skills use.
+
+```yaml
+version: 1
+knowledge_bases:
+  - name: bookings
+    reference: /Users/alice/akashic/.bookings
+```
+
 ---
 
 ## `config.yaml`

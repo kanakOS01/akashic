@@ -2,6 +2,7 @@ from pathlib import Path
 
 from akashic import __version__
 from akashic.cli import app
+from akashic.engine.registry import register_knowledge_base
 
 
 def test_version_flag_prints_version(runner) -> None:
@@ -16,6 +17,37 @@ def test_temp_knowledge_repo_fixture(temp_knowledge_repo) -> None:
 
     assert repo.exists()
     assert repo.is_dir()
+
+
+def test_bases_command_lists_global_registry(runner, tmp_path: Path, monkeypatch) -> None:
+    global_home = tmp_path / "global" / "akashic"
+    monkeypatch.setenv("AKASHIC_GLOBAL_HOME", str(global_home))
+    knowledge = tmp_path / "knowledge"
+    knowledge.mkdir()
+    register_knowledge_base(knowledge)
+
+    result = runner.invoke(app, ["bases"])
+
+    assert result.exit_code == 0, result.stdout
+    assert f"Registry: {global_home / 'knowledge-bases.yaml'}" in result.stdout
+    assert f"{knowledge.resolve()}\tknowledge" in result.stdout
+
+
+def test_bases_command_discovers_hidden_global_knowledge_bases(
+    runner,
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    global_home = tmp_path / "global" / "akashic"
+    hidden_base = global_home / ".checkout"
+    (hidden_base / ".akashic").mkdir(parents=True)
+    (hidden_base / ".akashic" / "config.yaml").write_text("version: 1\n", encoding="utf-8")
+    monkeypatch.setenv("AKASHIC_GLOBAL_HOME", str(global_home))
+
+    result = runner.invoke(app, ["bases"])
+
+    assert result.exit_code == 0, result.stdout
+    assert f"{hidden_base.resolve()}\tcheckout" in result.stdout
 
 
 def test_serve_command_invokes_provider(runner, tmp_path: Path, monkeypatch) -> None:
@@ -100,5 +132,3 @@ def test_build_site_command_handles_site_error(runner, tmp_path: Path, monkeypat
     assert result.exit_code != 0
     output = result.stdout + (result.stderr or "")
     assert "Build failed" in output
-
-

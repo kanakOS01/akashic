@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 
 from akashic.engine.config import write_default_config
+from akashic.engine.registry import register_knowledge_base
 
 KNOWLEDGE_DIRS = ("services", "flows", "system", "adr", "entities", "glossary")
 AKASHIC_DIRS = (".akashic/cache", ".akashic/logs")
@@ -32,7 +33,17 @@ def init_workspace(root: Path) -> Path:
     _merge_gitignore(root / ".gitignore")
     _ensure_git_repo(root)
     _ensure_initial_commit(root)
+    _register_global_reference(root)
     return root
+
+
+def _register_global_reference(root: Path) -> None:
+    try:
+        register_knowledge_base(root)
+    except OSError:
+        # The knowledge repo itself is still valid if the machine-level registry
+        # cannot be written, for example in a read-only home directory.
+        return
 
 
 def _merge_gitignore(path: Path) -> None:
@@ -82,4 +93,3 @@ def _ensure_initial_commit(root: Path) -> None:
         capture_output=True,
         text=True,
     )
-

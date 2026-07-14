@@ -7,6 +7,10 @@ import typer
 from akashic import __version__
 from akashic.engine.generate import GenerateError, run_generate
 from akashic.engine.init import init_workspace
+from akashic.engine.registry import (
+    discover_knowledge_bases,
+    registry_path,
+)
 from akashic.engine.repositories import (
     RepositoryError,
     attach_repository,
@@ -85,6 +89,19 @@ def root(ctx: typer.Context) -> None:
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
     typer.echo(workspace.root)
+
+
+@app.command()
+def bases() -> None:
+    """List globally registered Akashic knowledge bases."""
+    references = discover_knowledge_bases()
+    typer.echo(f"Registry: {registry_path()}")
+    if not references:
+        typer.echo("No knowledge bases registered.")
+        return
+
+    for reference in references:
+        typer.echo(f"{reference.reference}\t{reference.name}")
 
 
 @app.command()

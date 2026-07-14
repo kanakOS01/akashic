@@ -7,10 +7,13 @@ End-to-end walkthrough. Assumes `akashic` is installed and on `PATH` (see [insta
 ```bash
 mkdir knowledge && cd knowledge
 akashic init
-# -> Initialized Akashic repository at /…/knowledge
+# -> Initialized Akashic repository at /Users/alice/knowledge
 ```
 
 This creates the section directories (`services/ flows/ system/ adr/ entities/ glossary/`), a `README.md`, `.akashic/` (with `cache/` and `logs/`), a `.gitignore`, runs `git init`, and makes an empty initial commit. Re-running is safe.
+By default, `akashic init` initializes the current directory. The absolute path
+to that knowledge base is stored as a reference in the global registry under
+`~/akashic/knowledge-bases.yaml`, so installed skills can discover it later.
 
 All later commands can run from anywhere **inside** this repo — Akashic walks up to find `.akashic/config.yaml`.
 
