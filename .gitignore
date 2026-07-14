@@ -6,3 +6,6 @@ __pycache__/
 .akashic/cache/
 .akashic/logs/
 .akashic/config.local.yaml
+node_modules/
+dist/
+node_modules
