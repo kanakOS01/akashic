@@ -46,6 +46,15 @@ dev = [
   "twine>=5",
 ]
 
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "twine>=6.2.0",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
 [project.scripts]
 akashic = "akashic.cli:app"
 
@@ -56,11 +65,6 @@ testpaths = ["tests"]
 packages = ["src/akashic"]
 force-include = { "frontend" = "akashic/frontend" }
 only-include = ["src/akashic", "frontend"]
-
-[dependency-groups]
-dev = [
-    "twine>=6.2.0",
-]
 
 [tool.hatch.build]
 exclude = [
