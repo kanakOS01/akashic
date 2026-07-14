@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
+from akashic import __version__
 from akashic.engine.workspace import Workspace
 
 
@@ -67,16 +68,52 @@ def _ensure_npm(workspace: Workspace, frontend_dir: Path) -> None:
             raise SiteError(f"Failed to install frontend dependencies in {frontend_dir}: {exc}") from exc
 
 
+def _cache_root() -> Path:
+    override = os.environ.get("AKASHIC_CACHE_DIR")
+    if override:
+        return Path(override).expanduser().resolve()
+
+    xdg_cache = os.environ.get("XDG_CACHE_HOME")
+    if xdg_cache:
+        return (Path(xdg_cache).expanduser() / "akashic").resolve()
+
+    return (Path.home() / ".cache" / "akashic").resolve()
+
+
+def _copy_frontend_source(source: Path, target: Path) -> None:
+    if not (source / "package.json").exists():
+        raise SiteError(f"Akashic frontend package.json not found in {source}")
+
+    target.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(
+        source,
+        target,
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns("node_modules", "dist", "build", "out", ".next", "*.tsbuildinfo"),
+    )
+
+
+def _frontend_workdir(source: Path, cache_dir: Path | None = None) -> Path:
+    cache = cache_dir or _cache_root()
+    target = cache / "frontend" / __version__
+    _copy_frontend_source(source, target)
+    return target
+
+
 @dataclass(frozen=True)
 class ViteSiteProvider:
     frontend_dir: Path | None = None
+    cache_dir: Path | None = None
 
     def _frontend(self) -> Path:
         return self.frontend_dir or _frontend_dir()
 
+    def _workdir(self) -> Path:
+        return _frontend_workdir(self._frontend(), self.cache_dir)
+
     def serve(self, workspace: Workspace) -> subprocess.Popen:
         _ensure_node()
-        frontend_dir = self._frontend()
+        frontend_dir = self._workdir()
         _ensure_npm(workspace, frontend_dir)
 
         env = {
@@ -104,7 +141,7 @@ class ViteSiteProvider:
 
     def build_site(self, workspace: Workspace) -> Path:
         _ensure_node()
-        frontend_dir = self._frontend()
+        frontend_dir = self._workdir()
         _ensure_npm(workspace, frontend_dir)
 
         dist = workspace.root / "dist"
