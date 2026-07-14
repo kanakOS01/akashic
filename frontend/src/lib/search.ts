@@ -5,6 +5,7 @@ import type { DocRecord, IndexEntry } from "./types";
 export function useSearch(index: IndexEntry[], docs: Record<string, DocRecord>) {
   const mini = useMemo(() => {
     const engine = new MiniSearch<IndexEntry>({
+      idField: "path",
       fields: ["title", "summary", "section"],
       storeFields: ["path", "title", "section", "type", "summary"],
       searchOptions: { boost: { title: 2 }, prefix: true, fuzzy: 0.2 },

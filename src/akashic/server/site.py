@@ -30,9 +30,13 @@ def _frontend_dir() -> Path:
     try:
         from importlib import resources
 
-        return (resources.files("akashic") / "frontend").resolve()  # type: ignore[no-any-return]
+        packaged = (resources.files("akashic") / "frontend").resolve()
+        if (packaged / "package.json").exists():
+            return packaged  # type: ignore[no-any-return]
     except Exception:
-        return (Path(__file__).resolve().parent.parent.parent.parent / "frontend").resolve()
+        pass
+
+    return (Path(__file__).resolve().parent.parent.parent.parent / "frontend").resolve()
 
 
 def _ensure_node() -> str:
