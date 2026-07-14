@@ -19,10 +19,25 @@ architecture decisions, look here first rather than guessing from source code al
 ## Where the knowledge repo lives
 
 The knowledge repo is a normal Git repository, separate from the source repositories
-it documents. It's registered via `.akashic/config.yaml` (`knowledge.path`) and the
-attached source repos it covers are listed under `repositories:` in that same file.
-Per-machine local paths for those source repos live in the gitignored
-`.akashic/config.local.yaml`.
+it documents. Do not assume the current source repository contains `.akashic/`.
+Knowledge repos are registered per machine in `~/.akashic/config.yaml` under
+`knowledge_bases:`.
+
+When this skill is used:
+
+1. Read `~/.akashic/config.yaml`.
+2. List the registered knowledge base names from `knowledge_bases`.
+3. Ask the user which knowledge base name to use.
+4. Resolve that name to its registered `path`.
+5. Read docs from that path.
+
+If `~/.akashic/config.yaml` is missing, empty, malformed, or does not contain the
+requested name, tell the user to run `akashic init <knowledge-path>` for that
+knowledge base.
+
+Inside the resolved knowledge repo, attached source repos it covers are listed
+under `repositories:` in `.akashic/config.yaml`. Per-machine local paths for those
+source repos live in the gitignored `.akashic/config.local.yaml`.
 
 ## Folder structure and what each directory means
 

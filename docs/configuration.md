@@ -1,5 +1,18 @@
 # Configuration
 
+Akashic also keeps a per-user registry at `~/.akashic/config.yaml`. This file is
+created/updated only by `akashic init` and lets installed agent skills resolve a
+knowledge base name to its local path:
+
+```yaml
+knowledge_bases:
+  knowledge:
+    path: /Users/alice/docs/knowledge
+```
+
+If two initialized knowledge repos have the same directory basename, Akashic
+registers the later one with a numeric suffix such as `knowledge-2`.
+
 Akashic uses **two** config files under `.akashic/`:
 
 | File | Committed? | Purpose |

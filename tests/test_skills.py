@@ -37,6 +37,14 @@ def test_install_skill_writes_static_content_for_claude(runner, tmp_path: Path) 
     assert result.skill_path.read_text(encoding="utf-8") == _bundled_skill_text()
 
 
+def test_bundled_skill_uses_global_registry() -> None:
+    text = _bundled_skill_text()
+
+    assert "~/.akashic/config.yaml" in text
+    assert "Do not assume the current source repository contains `.akashic/`" in text
+    assert "Ask the user which knowledge base name to use" in text
+
+
 def test_install_skill_writes_static_content_for_codex(runner, tmp_path: Path) -> None:
     knowledge = _init_workspace(runner, tmp_path)
     workspace = discover_workspace(knowledge=knowledge)
