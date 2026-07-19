@@ -66,13 +66,15 @@
 
         <section class="dark loop-slide" data-background-color="#201a35" data-auto-animate>
           <p class="eyebrow">The loop</p>
-          <h2>Four commands. One living knowledge base.</h2>
+          <h2>Eight commands. One living knowledge base.</h2>
           <div class="loop-rail">
             <div class="loop-stage stage-init fragment fade-up" data-fragment-index="0"><i>01</i><strong>init</strong><span>scaffold memory</span></div>
             <div class="loop-stage stage-attach fragment fade-up" data-fragment-index="1"><i>02</i><strong>attach</strong><span>register repos</span></div>
             <div class="promise-origin loop-core" data-id="knowledge-repo"><small>KNOWLEDGE REPOSITORY</small><strong>generate</strong><span>compose + launch</span></div>
-            <div class="loop-stage stage-review fragment fade-up" data-fragment-index="2"><i>03</i><strong>review</strong><span>inspect the diff</span></div>
-            <div class="loop-stage stage-serve fragment fade-up" data-fragment-index="3"><i>04</i><strong>serve</strong><span>browse + search</span></div>
+            <div class="loop-stage stage-review fragment fade-up" data-fragment-index="2"><i>03</i><strong>Doctor</strong><span>Diagnose mismatches</span></div>
+            <div class="loop-stage stage-serve fragment fade-up" data-fragment-index="3"><i>04</i><strong>serve</strong><span>edit + search</span></div>
+            <div class="loop-stage stage-build fragment fade-up" data-fragment-index="4"><i>05</i><strong>build-site</strong><span>static export</span></div>
+            <div class="loop-story">+ doctor · status · root · detach</div>
             <div class="loop-path"></div>
           </div>
           <div class="loop-contract auto auto-5"><span>source repos stay in place</span><i>•</i><span>the session stays visible</span><i>•</i><span>Git stays under user control</span></div>
@@ -129,7 +131,7 @@
           <h2 class="ink auto auto-1">Generated structure.<br />Protected human judgment.</h2>
           <div class="document-sheet auto auto-2">
             <div class="document-frontmatter">
-              <span><b>generated:</b> true</span><span><b>type:</b> service</span><span><b>name:</b> payments</span><span><b>sources:</b> [/repos/payments]</span><span><b>updated_at:</b> 2026-07-14T...</span>
+              <span><b>title:</b> Payments</span><span><b>type:</b> service</span><span><b>source_repositories:</b> [payments]</span><span><b>generated_at:</b> 2026-07-14T...</span><span><b>akashic_version:</b> 0.1.0</span>
             </div>
             <div class="document-body"><small>REFRESHABLE</small><strong>Service facts, interfaces,<br />flows, and diagrams</strong></div>
             <div class="human-band"><small>HUMAN START</small><strong>Decisions, caveats, and team memory survive regeneration.</strong><small>HUMAN END</small></div>
@@ -145,7 +147,7 @@
             <div class="architecture-node engine-node auto auto-3"><small>ORCHESTRATE</small><strong>AKASHIC<br />ENGINE</strong><span>discover • compose • validate</span></div>
             <div class="architecture-node session-node auto auto-4"><small>INTERACTIVE</small><strong>AUTHORING<br />SESSION</strong><span>visible + approved live</span></div>
             <div class="architecture-node knowledge-node auto auto-5"><small>WRITE</small><strong>KNOWLEDGE<br />REPO</strong><span>Markdown + Git history</span></div>
-            <div class="architecture-node site-node auto auto-6"><small>BROWSE</small><strong>LOCAL<br />SITE</strong><span>search + diagrams</span></div>
+            <div class="architecture-node site-node auto auto-6"><small>BROWSE + EDIT</small><strong>LOCAL<br />SITE</strong><span>search + diagrams + commit</span></div>
             <svg class="architecture-lines" viewBox="0 0 1160 340" aria-hidden="true"><path d="M170 170 H365" /><path d="M545 170 H705" /><path d="M875 170 H1010" /><path d="M1010 205 C1010 285 930 285 875 285" /></svg>
             <div class="architecture-packet">context</div>
           </div>
@@ -156,8 +158,13 @@
           <h2 class="auto auto-1">Knowledge should feel navigable,<br />not merely stored.</h2>
           <div class="browser-frame auto auto-2">
             <div class="browser-top"><span><i></i><i></i><i></i></span><b>localhost:6969</b></div>
-            <aside><small>SEARCH KNOWLEDGE</small><div class="search-box">⌕ payments</div><nav><b>SYSTEM</b><b>SERVICES</b><a>payments</a><a>identity</a><b>FLOWS</b><b>ENTITIES</b><b>ADRS</b></nav></aside>
-            <main><div class="doc-title"><div><small>SERVICE</small><h3>Payments</h3></div><span>GENERATED</span></div><p>Owns payment intent creation, confirmation, and ledger handoff.</p><div class="doc-metrics"><span><strong>12</strong>endpoints</span><span><strong>04</strong>flows</span><span><strong>03</strong>decisions</span></div><div class="doc-flow"><i>intent</i><b>→</b><i>confirm</i><b>→</b><i>ledger</i></div></main>
+            <aside><small>FULL-TEXT SEARCH</small><div class="search-box">⌕ payments</div><nav><b>SECTIONS</b><a>Services</a><a>Flows</a><a>System</a><a>Entities</a><a>ADR</a><a>Glossary</a></nav></aside>
+            <main>
+              <div class="doc-title"><div><small>SERVICE &mdash; Monaco Editor</small><h3>Payments</h3></div><span class="badge-edit">EDITABLE</span></div>
+              <p>Owns payment intent creation, confirmation, and ledger handoff.</p>
+              <div class="experience-toolbar"><span class="tb-btn tb-active">View</span><span class="tb-btn">Edit</span><span class="tb-spacer"></span><span class="tb-btn">Save</span><span class="tb-btn">Commit</span><span class="tb-btn tb-push">Push</span></div>
+              <div class="experience-footer"><span><b>Mermaid</b> diagrams render inline</span><span><b>TOC</b> scroll tracking</span><span><b>MiniSearch</b> instant search</span></div>
+            </main>
           </div>
         </section>
 
@@ -167,7 +174,7 @@
           <div class="trust-rails">
             <article class="trust-rail auto auto-2"><span>SOURCE CODE</span><strong>registered in place</strong><b>not moved by Akashic</b><i class="rail-marker marker-cyan"></i></article>
             <article class="trust-rail auto auto-3"><span>GENERATION</span><strong>interactive session</strong><b>permissions approved live</b><i class="rail-marker marker-lime"></i></article>
-            <article class="trust-rail auto auto-4"><span>GIT</span><strong>no staging or commits</strong><b>the user owns every diff</b><i class="rail-marker marker-orange"></i></article>
+            <article class="trust-rail auto auto-4"><span>GIT</span><strong>commits through user action</strong><b>you decide when to push</b><i class="rail-marker marker-orange"></i></article>
             <article class="trust-rail auto auto-5"><span>KNOWLEDGE</span><strong>plain local files</strong><b>inspect with any editor</b><i class="rail-marker marker-violet"></i></article>
           </div>
           <div class="risk-note auto auto-6"><small>KNOWN LIMITATION</small><span>Source-repo write protection is prompt-enforced in v1. Generate against clean, committed trees.</span></div>
@@ -177,9 +184,9 @@
           <p class="eyebrow auto auto-1">MVP boundary</p>
           <h2 class="auto auto-1">Sharp scope is a feature.</h2>
           <div class="scope-board">
-            <div class="scope-column in-scope auto auto-2"><h3>PROVE NOW</h3><span>init, attach, detach, list</span><span>interactive generation</span><span>two provider adapters</span><span>structured documents</span><span>local site + static build</span><span>doctor + status</span></div>
+            <div class="scope-column in-scope auto auto-2"><h3>PROVE NOW</h3><span>init, attach, detach, list, root</span><span>interactive generation (Claude, Codex, Fake)</span><span>structured documents + custom prompts</span><span>browser editing with Monaco</span><span>commit & push from the site</span><span>local serve + static build-site</span><span>doctor diagnostics + status</span><span>full-text search with MiniSearch</span><span>Mermaid diagram rendering</span></div>
             <div class="scope-axis auto auto-3"><i></i><strong>THE<br />LOOP</strong><span>source<br />↓<br />understanding<br />↓<br />Git<br />↓<br />browser</span></div>
-            <div class="scope-column later-scope auto auto-4"><h3>HARDEN LATER</h3><span>cloud backend or auth</span><span>headless scheduling</span><span>deterministic orchestration</span><span>automatic merge engine</span><span>in-browser Git workflows</span><span>knowledge graph</span></div>
+            <div class="scope-column later-scope auto auto-4"><h3>HARDEN LATER</h3><span>cloud backend or auth</span><span>headless scheduling</span><span>deterministic orchestration</span><span>automatic merge engine</span><span>knowledge graph</span><span>multi-user collaboration</span></div>
           </div>
         </section>
 
@@ -193,7 +200,33 @@
             <div class="seam-ring seam-four"><span>CONFIG</span></div>
             <div class="seam-core"><small>FAKE</small><strong>PROVIDER</strong><span>fast + deterministic</span></div>
           </div>
-          <div class="validation-list auto auto-4"><span><b>CLI</b> full user workflows</span><span><b>PROVIDER</b> invocation contract</span><span><b>PROMPT</b> composition + overrides</span><span><b>CONFIG</b> merge + validation</span><span><b>GIT</b> observable repository state</span><span><b>SITE</b> static build contract</span></div>
+          <div class="validation-list auto auto-4"><span><b>CLI</b> 10 commands, full workflows</span><span><b>PROVIDER</b> Claude, Codex, Fake</span><span><b>PROMPT</b> composition + custom overrides</span><span><b>CONFIG</b> split-config merge + validation</span><span><b>GIT</b> observable repository state</span><span><b>SITE</b> serve + static build</span><span><b>DOCTOR</b> 6 diagnostic checks</span><span><b>STATUS</b> repos, gen, pending changes</span></div>
+        </section>
+
+        <section class="dark ops-slide" data-background-color="#15121f" data-terminal="doctor">
+          <p class="eyebrow auto auto-1">Health & feedback</p>
+          <h2 class="auto auto-1"><code>akashic doctor</code> · <code>akashic status</code></h2>
+          <div class="ops-grid auto auto-2">
+            <div class="ops-card"><span>CONFIG</span><strong>validates schema</strong></div>
+            <div class="ops-card"><span>GIT</span><strong>checks repository</strong></div>
+            <div class="ops-card"><span>REPOS</span><strong>verifies paths</strong></div>
+            <div class="ops-card"><span>AGENT</span><strong>binary on PATH</strong></div>
+            <div class="ops-card"><span>WRITE</span><strong>writability test</strong></div>
+            <div class="ops-card"><span>NODE</span><strong>runtime check</strong></div>
+          </div>
+          <div class="ops-right auto auto-3">
+            <div class="ops-cli-preview">
+              <div class="terminal-top"><span class="terminal-dots"><i></i><i></i><i></i></span><b>akashic status</b></div>
+              <div class="ops-screen">
+                <div class="ops-line dim">Attached repositories:</div>
+                <div class="ops-line good">- payments (/repos/payments)</div>
+                <div class="ops-line good">- identity (/repos/identity)</div>
+                <div class="ops-line dim">Last generation: 2026-07-14  ✓</div>
+                <div class="ops-line accent">14 documents across 5 sections</div>
+              </div>
+            </div>
+            <div class="ops-build-note"><small>STATIC</small><span>akashic build-site → ./dist (SPA with 404 fallback)</span></div>
+          </div>
         </section>
 
         <section class="close-slide" data-background-color="#c9ff5c">
