@@ -4,7 +4,6 @@ import subprocess
 from pathlib import Path
 
 from akashic.engine.config import write_default_config
-from akashic.engine.global_config import register_knowledge_base
 
 KNOWLEDGE_DIRS = ("services", "flows", "system", "adr", "entities", "glossary")
 AKASHIC_DIRS = (".akashic/cache", ".akashic/logs")
@@ -15,7 +14,7 @@ GITIGNORE_LINES = (
 )
 
 
-def init_workspace(root: Path, home: Path | None = None) -> Path:
+def init_workspace(root: Path) -> Path:
     root = root.resolve()
     root.mkdir(parents=True, exist_ok=True)
 
@@ -33,7 +32,6 @@ def init_workspace(root: Path, home: Path | None = None) -> Path:
     _merge_gitignore(root / ".gitignore")
     _ensure_git_repo(root)
     _ensure_initial_commit(root)
-    register_knowledge_base(root, home=home)
     return root
 
 
@@ -84,3 +82,4 @@ def _ensure_initial_commit(root: Path) -> None:
         capture_output=True,
         text=True,
     )
+

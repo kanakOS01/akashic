@@ -13,11 +13,6 @@ from akashic.engine.repositories import (
     detach_repository,
     list_repositories,
 )
-from akashic.engine.skills import (
-    UnknownSkillTargetError,
-    default_target,
-    install_skill,
-)
 from akashic.engine.workspace import WorkspaceNotFoundError, discover_workspace
 from akashic.server.site import SiteError, default_site_provider
 
@@ -25,9 +20,6 @@ app = typer.Typer(
     add_completion=False,
     help="Akashic knowledge repository CLI.",
 )
-
-add_app = typer.Typer(add_completion=False, help="Add resources to the knowledge repository.")
-app.add_typer(add_app, name="add")
 
 
 def _version_callback(value: bool) -> None:
@@ -255,32 +247,6 @@ def status(ctx: typer.Context) -> None:
         doc_word = "document" if count == 1 else "documents"
         typer.echo(f"- {section}: {count} {doc_word}")
 
-
-
-@add_app.command("skill")
-def add_skill(
-    ctx: typer.Context,
-    to: str | None = typer.Option(
-        None,
-        "--to",
-        help="Where to install the skill: 'claude' or 'codex'. Defaults to agent.provider in config.yaml.",
-    ),
-) -> None:
-    """Generate a SKILL.md from the knowledge base and install it for Claude or Codex."""
-    workspace = _workspace(ctx)
-
-    target = to
-    if target is None:
-        suggested = default_target(workspace)
-        prompt_text = "Add skill for which agent? [claude/codex]"
-        target = typer.prompt(prompt_text, default=suggested) if suggested else typer.prompt(prompt_text)
-
-    try:
-        result = install_skill(workspace, target)
-    except UnknownSkillTargetError as exc:
-        raise typer.BadParameter(str(exc)) from exc
-
-    typer.echo(f"Installed {result.target} skill at {result.skill_path}")
 
 
 def _workspace(ctx: typer.Context):

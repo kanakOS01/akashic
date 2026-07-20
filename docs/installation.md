@@ -26,7 +26,7 @@ The PyPI distribution is `akashic-kb`; the installed CLI command is `akashic`.
 With [uv](https://docs.astral.sh/uv/) (used by the repo, `uv.lock` present):
 
 ```bash
-uv sync                 # install project + dev dependencies (includes pytest)
+uv sync                 # install project + locked dependencies
 uv run akashic --version
 ```
 

@@ -6,7 +6,6 @@ from pathlib import Path
 
 from akashic.cli import app
 from akashic.engine.config import load_config
-from akashic.engine.global_config import load_global_config
 from akashic.engine.workspace import WorkspaceNotFoundError, discover_workspace
 
 
@@ -23,58 +22,6 @@ def test_init_scaffolds_repo_and_initial_commit(runner, tmp_path: Path) -> None:
     assert (repo / ".akashic" / "config.yaml").exists()
     assert (repo / ".git").exists()
     assert _git(repo, "rev-parse", "--verify", "HEAD").returncode == 0
-
-
-def test_init_registers_knowledge_base_in_global_config(
-    runner, tmp_path: Path, monkeypatch
-) -> None:
-    home = tmp_path / "home"
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: home))
-    repo = tmp_path / "knowledge"
-
-    result = runner.invoke(app, ["init", str(repo)])
-
-    assert result.exit_code == 0, result.stdout
-    global_config = load_global_config(home / ".akashic" / "config.yaml")
-    assert global_config.knowledge_bases["knowledge"].path == str(repo.resolve())
-
-
-def test_init_global_registry_is_idempotent_for_same_path(
-    runner, tmp_path: Path, monkeypatch
-) -> None:
-    home = tmp_path / "home"
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: home))
-    repo = tmp_path / "knowledge"
-
-    first = runner.invoke(app, ["init", str(repo)])
-    second = runner.invoke(app, ["init", str(repo)])
-
-    assert first.exit_code == 0, first.stdout
-    assert second.exit_code == 0, second.stdout
-    global_config = load_global_config(home / ".akashic" / "config.yaml")
-    assert list(global_config.knowledge_bases) == ["knowledge"]
-    assert global_config.knowledge_bases["knowledge"].path == str(repo.resolve())
-
-
-def test_init_global_registry_suffixes_name_collisions(
-    runner, tmp_path: Path, monkeypatch
-) -> None:
-    home = tmp_path / "home"
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: home))
-    first_repo = tmp_path / "first" / "knowledge"
-    second_repo = tmp_path / "second" / "knowledge"
-
-    first = runner.invoke(app, ["init", str(first_repo)])
-    second = runner.invoke(app, ["init", str(second_repo)])
-    repeated = runner.invoke(app, ["init", str(second_repo)])
-
-    assert first.exit_code == 0, first.stdout
-    assert second.exit_code == 0, second.stdout
-    assert repeated.exit_code == 0, repeated.stdout
-    global_config = load_global_config(home / ".akashic" / "config.yaml")
-    assert global_config.knowledge_bases["knowledge"].path == str(first_repo.resolve())
-    assert global_config.knowledge_bases["knowledge-2"].path == str(second_repo.resolve())
-    assert list(global_config.knowledge_bases) == ["knowledge", "knowledge-2"]
 
 
 def test_init_is_idempotent_and_preserves_content(runner, tmp_path: Path) -> None:

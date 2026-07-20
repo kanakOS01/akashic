@@ -17,11 +17,6 @@ Start with `akashic doctor`. It runs five checks and exits non-zero if any fail.
 
 ## Common problems
 
-### Akashic skill cannot find a knowledge base name
-Run `akashic init <knowledge-path>` for that knowledge repo. This creates or
-updates `~/.akashic/config.yaml`, which maps knowledge base names to local paths
-for installed agent skills.
-
 ### `No Akashic knowledge repo found from <dir>`
 You are not inside an initialized repo. Run `akashic init`, or pass `--knowledge <dir>`, or set `AKASHIC_HOME`.
 

@@ -26,7 +26,6 @@ Initialize (or top up) a knowledge repository at `PATH` (default: current direct
 Creates: `services/ flows/ system/ adr/ entities/ glossary/`, `.akashic/cache/`, `.akashic/logs/`, `README.md`, `.akashic/config.yaml`, `.gitignore`. Runs `git init` if not already a repo, and makes an empty initial commit if there is no `HEAD` yet.
 
 - **Idempotent:** existing directories, README, and config are left untouched; `.gitignore` lines are merged, not duplicated.
-- Registers the knowledge repo in `~/.akashic/config.yaml` using the directory basename as the knowledge base name. If that name already points at a different path, a suffix such as `-2` is added.
 - The initial commit is authored as `Akashic <akashic@example.invalid>` via `-c` overrides, so it does not depend on your global Git identity.
 
 `.gitignore` always contains: `.akashic/cache/`, `.akashic/logs/`, `.akashic/config.local.yaml`.
