@@ -13,7 +13,7 @@ akashic init
 This creates the section directories (`services/ flows/ system/ adr/ entities/ glossary/`), a `README.md`, `.akashic/` (with `cache/` and `logs/`), a `.gitignore`, runs `git init`, and makes an empty initial commit. Re-running is safe.
 By default, `akashic init` initializes the current directory. The absolute path
 to that knowledge base is stored as a reference in the global registry under
-`~/akashic/knowledge-bases.yaml`, so installed skills can discover it later.
+`~/.akashic/knowledge-bases.yaml`, so installed skills can discover it later.
 
 All later commands can run from anywhere **inside** this repo — Akashic walks up to find `.akashic/config.yaml`.
 
@@ -37,12 +37,19 @@ akashic list
 
 ## 3. Generate documentation
 
-> **Important:** with the default `codex` provider (or `claude`), `generate` currently composes the prompt and builds the agent command but does **not** execute the agent yet — no docs are written. To exercise the full pipeline today, use the `fake` provider. See [generation.md](generation.md#execution-status).
-
-Try the fake provider to see the pipeline run end-to-end:
+With the default `codex` provider (or `claude`), `generate` runs your agent CLI as an interactive session — it takes over the terminal, you approve permissions live, and it exits back to Akashic when done. See [generation.md](generation.md#execution-status).
 
 ```bash
-# set agent.provider: fake in .akashic/config.yaml, then:
+akashic generate
+# Changed files:
+# - services/bookings/purpose.md
+# - ...
+# State written: /…/knowledge/.akashic/cache/state.json
+```
+
+To exercise the pipeline deterministically (tests, CI, no real agent), set `agent.provider: fake` in `.akashic/config.yaml`:
+
+```bash
 akashic generate
 # Changed files:
 # - system/fake-provider.md

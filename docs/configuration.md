@@ -11,7 +11,7 @@ This split keeps machine-specific absolute paths out of Git, so a teammate can c
 
 Both files are validated on load with `extra="forbid"` — unknown keys raise a clear error.
 
-Akashic also keeps a machine-level registry at `~/akashic/knowledge-bases.yaml`
+Akashic also keeps a machine-level registry at `~/.akashic/knowledge-bases.yaml`
 (`$AKASHIC_GLOBAL_HOME/knowledge-bases.yaml` when that environment variable is
 set). This registry is not part of any single knowledge repo. It records the
 display name and reference for every local knowledge base created with
@@ -22,7 +22,7 @@ and that path is what installed Claude/Codex skills use.
 version: 1
 knowledge_bases:
   - name: bookings
-    reference: /Users/alice/akashic/.bookings
+    reference: /Users/alice/.akashic/.bookings
 ```
 
 ---
@@ -55,7 +55,7 @@ generation:
 - **`version`** (int, default `1`) — config contract version.
 - **`knowledge.path`** (str, default `"."`) — knowledge root, surfaced in the prompt's Knowledge Layout section.
 - **`repositories`** (list) — each entry `{ name, settings }`. Managed by `attach`/`detach`; edit by hand only if you know what you're doing. `settings` is reserved and currently unused.
-- **`agent.provider`** (str, default `codex`) — selects the provider. `codex` and `claude` construct real agent commands (but do not execute yet — see [generation.md](generation.md#execution-status)); `fake` runs the full pipeline and writes a placeholder doc. An unknown value errors `Unknown agent provider '<x>'.`
+- **`agent.provider`** (str, default `codex`) — selects the provider. `codex` and `claude` run the real agent CLI interactively (see [generation.md](generation.md#execution-status)); `fake` runs the full pipeline and writes a placeholder doc. An unknown value errors `Unknown agent provider '<x>'.`
 - **`agent.command`** (str | null) — override the binary looked up on `PATH` (default `claude` or `codex`). Useful for non-standard installs.
 - **`site.port`** (int, default `6969`) — bind port for `serve`.
 - **`generation.model`** (str | null) — reserved model hint; not yet passed to the agent.

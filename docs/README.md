@@ -12,8 +12,8 @@ This directory documents how to install, configure, and operate the CLI as it is
 | [quickstart.md](quickstart.md) | End-to-end: init → attach → generate → serve |
 | [commands.md](commands.md) | Every command, arguments, options, output |
 | [configuration.md](configuration.md) | `config.yaml`, `config.local.yaml`, every field + default |
-| [generation.md](generation.md) | Prompt system, providers, HUMAN sections, frontmatter, current limitation |
-| [site.md](site.md) | `serve` and `build-site` (MkDocs) |
+| [generation.md](generation.md) | Prompt system, providers, HUMAN sections, frontmatter |
+| [site.md](site.md) | `serve` and `build-site` (React/Vite site) |
 | [troubleshooting.md](troubleshooting.md) | `doctor`, common errors |
 
 ## Mental model
@@ -22,12 +22,12 @@ This directory documents how to install, configure, and operate the CLI as it is
 akashic init      ->  scaffold a Git knowledge repo (services/ flows/ system/ adr/ entities/ glossary/)
 akashic attach    ->  register a source repo (path stored per-machine, name committed)
 akashic generate  ->  compose a master prompt + run the configured agent, which writes docs
-akashic serve     ->  browse the docs locally via MkDocs
+akashic serve     ->  browse the docs locally via the React site
 akashic build-site->  compile the docs to dist/
 akashic doctor    ->  validate setup
 akashic status    ->  show repos, last generation, pending changes, doc counts
 ```
 
-## Current limitation (read before generating)
+## Real agent execution
 
-The real agent providers (`claude`, `codex`) currently **build the invocation command but do not execute it** — live agent execution is pending verification (issue 07). Only the built-in `fake` provider actually writes files today. See [generation.md](generation.md#execution-status) for details and how to exercise the full pipeline with the fake provider.
+With `agent.provider: claude` or `codex`, `generate` runs the real agent CLI as an interactive child process (inherited stdio) and waits for it to exit — see [generation.md](generation.md#execution-status). Use `agent.provider: fake` for deterministic, non-interactive runs (tests, CI, exercising the pipeline without a real agent).
