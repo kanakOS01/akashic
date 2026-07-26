@@ -30,7 +30,7 @@ def global_akashic_dir(
     configured = env.get("AKASHIC_GLOBAL_HOME")
     if configured:
         return Path(configured).expanduser().resolve()
-    return (home or Path.home()) / "akashic"
+    return (home or Path.home()) / ".akashic"
 
 
 def registry_path(

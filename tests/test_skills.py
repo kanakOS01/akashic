@@ -40,8 +40,8 @@ def test_install_skill_writes_static_content_for_claude(runner, tmp_path: Path, 
     assert skill_text.startswith("---\nname: akashic-knowledge")
     assert skill_text.index("## Runtime knowledge base selection") < skill_text.index("# Akashic Knowledge Base")
     assert "# Akashic Knowledge Base" in _bundled_skill_text()
-    assert f"Global Akashic folder: `{home / 'akashic'}`" in skill_text
-    assert f"Machine-level registry: `{home / 'akashic' / 'knowledge-bases.yaml'}`" in skill_text
+    assert f"Global Akashic folder: `{home / '.akashic'}`" in skill_text
+    assert f"Machine-level registry: `{home / '.akashic' / 'knowledge-bases.yaml'}`" in skill_text
     assert "Scan the global folder for child directories that contain `.akashic/config.yaml`" in skill_text
     assert "Keep only paths that exist and contain `.akashic/config.yaml`" in skill_text
     assert "Your first user-visible response must be the discovered reference list" in skill_text
@@ -74,7 +74,7 @@ def test_install_skill_does_not_embed_snapshot_of_hidden_global_bases(
     workspace = discover_workspace(knowledge=knowledge)
     home = tmp_path / "home-hidden"
     monkeypatch.delenv("AKASHIC_GLOBAL_HOME", raising=False)
-    hidden_base = home / "akashic" / ".checkout"
+    hidden_base = home / ".akashic" / ".checkout"
     (hidden_base / ".akashic").mkdir(parents=True)
     (hidden_base / ".akashic" / "config.yaml").write_text("version: 1\n", encoding="utf-8")
 
