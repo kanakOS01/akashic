@@ -92,7 +92,12 @@ def install_skill(workspace: Workspace, target: str, home: Path | None = None) -
             f"Unknown skill target '{target}'. Expected one of: {', '.join(sorted(_TARGET_DIRS))}."
         )
 
-    register_knowledge_base(workspace.root, home=home)
+    try:
+        register_knowledge_base(workspace.root, home=home)
+    except OSError:
+        # Installing the skill should still succeed even if the machine-level registry
+        # cannot be updated (e.g. read-only home directory).
+        pass
     skill_dir = (home or Path.home()) / _TARGET_DIRS[target]
     skill_dir.mkdir(parents=True, exist_ok=True)
     skill_path = skill_dir / "SKILL.md"
