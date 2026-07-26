@@ -94,8 +94,12 @@ def root(ctx: typer.Context) -> None:
 @app.command()
 def bases() -> None:
     """List globally registered Akashic knowledge bases."""
-    references = discover_knowledge_bases()
     typer.echo(f"Registry: {registry_path()}")
+    try:
+        references = discover_knowledge_bases()
+    except (ValueError, OSError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     if not references:
         typer.echo("No knowledge bases registered.")
         return
