@@ -48,7 +48,13 @@ def list_knowledge_bases(
     if not path.exists():
         return []
 
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError as exc:
+        raise ValueError(f"Invalid Akashic registry YAML at {path}: {exc}") from exc
+    except OSError as exc:
+        raise ValueError(f"Unable to read Akashic registry at {path}: {exc}") from exc
+
     references = raw.get("knowledge_bases", [])
     bases: list[KnowledgeBaseReference] = []
     for reference in references:
@@ -57,7 +63,9 @@ def list_knowledge_bases(
         name = reference.get("name")
         base_path = reference.get("reference", reference.get("path"))
         if isinstance(name, str) and isinstance(base_path, str):
-            bases.append(KnowledgeBaseReference(name=name, path=Path(base_path)))
+            bases.append(
+                KnowledgeBaseReference(name=name, path=Path(base_path).expanduser())
+            )
     return bases
 
 
